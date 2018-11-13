@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -31,12 +32,13 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
-   private static final String COGNITO_POOL_ID = "YOUR_VALUE";
-    private static final String BUCKET_NAME = "YOUR_VALUE";// protected static final String COGNITO_POOL_ID ="us-east-1:b49d58b8-65ae-400b-9ab9-5c0c5685f709";//"us-east-1:8609474f-b806-4464-95a1-ed5f6bb0fe38"; //"us-east-1_G5nTErGjf";
 
+    protected static final String COGNITO_POOL_ID = "us-east-1:b49d58b8-65ae-400b-9ab9-5c0c5685f709";//"us-east-1:8609474f-b806-4464-95a1-ed5f6bb0fe38"; //"us-east-1_G5nTErGjf";
+    public static  String BUCKET_NAME = "test12321a"; //"omnapibucket";
 
     private static final int PICK_IMAGE_REQUEST_CODE = 1;
     private static final String TAG = MainActivity.class.getCanonicalName();
+
     EditText editTextUpload;
     EditText editTextDownload;
     ImageView imageViewUpload;
@@ -54,9 +56,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initUI();
         createTransferUtility();
+
+        if (getIntent().hasExtra("OBJ_KEY")) {
+            BUCKET_NAME=getIntent().getStringExtra("BUCKET_NAME");
+            download(getIntent().getStringExtra("OBJ_KEY"), BUCKET_NAME);
+        }
     }
 
     private void initUI() {
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (imageUri != null) {
-                    if (!TextUtils.isEmpty(editTextUpload.getText().toString())){
+                    if (!TextUtils.isEmpty(editTextUpload.getText().toString())) {
                         String objectKey = editTextUpload.getText().toString();
                         File file = null;
                         try {
@@ -120,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     progressDialogDownload.setCancelable(false);
                     progressDialogDownload.show();
 
-                    download(objectKey);
+                    download(objectKey, BUCKET_NAME);
                 } else {
                     Toast.makeText(MainActivity.this, "Enter object key in EditText", Toast.LENGTH_SHORT).show();
                 }
@@ -142,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
+        switch (requestCode) {
             case PICK_IMAGE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
@@ -202,7 +208,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {}
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            }
 
             @Override
             public void onError(int id, Exception ex) {
@@ -214,28 +221,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void download(String objectKey) {
+    void download(String objectKey, String bucketName) {
         final File fileDownload = new File(getCacheDir(), objectKey);
 
         TransferObserver transferObserver = transferUtility.download(
-                BUCKET_NAME,
+                bucketName,
                 objectKey,
                 fileDownload
         );
-        transferObserver.setTransferListener(new TransferListener(){
+        transferObserver.setTransferListener(new TransferListener() {
 
             @Override
             public void onStateChanged(int id, TransferState state) {
                 Log.d(TAG, "onStateChanged: " + state);
                 if (TransferState.COMPLETED.equals(state)) {
+                    Log.d("TAG",fileDownload.getAbsolutePath());
                     imageViewDownload.setImageBitmap(BitmapFactory.decodeFile(fileDownload.getAbsolutePath()));
-                    progressDialogDownload.dismiss();
+              //      progressDialogDownload.dismiss();
+
                     Toast.makeText(MainActivity.this, "Image downloaded", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {}
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            }
 
             @Override
             public void onError(int id, Exception ex) {
