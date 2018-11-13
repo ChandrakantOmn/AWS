@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
   //  protected static final Regions MY_REGION = Regions.US_EAST_2; // WHAT EVER REGION IT MAY BE, PLEASE CHOOSE EXACT
     //public static final String BUCKET_NAME ="test12321a"; //"omnapibucket";
 
+
     private static final int PICK_IMAGE_REQUEST_CODE = 1;
     private static final String TAG = MainActivity.class.getCanonicalName();
     EditText editTextUpload;
