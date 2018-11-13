@@ -31,12 +31,12 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
-   // private static final String COGNITO_POOL_ID = "YOUR_VALUE";
-   // private static final String BUCKET_NAME = "YOUR_VALUE";
+ private static final String COGNITO_POOL_ID = "YOUR_VALUE";
+    private static final String BUCKET_NAME = "YOUR_VALUE";
 
-    protected static final String COGNITO_POOL_ID ="us-east-1:b49d58b8-65ae-400b-9ab9-5c0c5685f709";//"us-east-1:8609474f-b806-4464-95a1-ed5f6bb0fe38"; //"us-east-1_G5nTErGjf";
+   // protected static final String COGNITO_POOL_ID ="us-east-1:b49d58b8-65ae-400b-9ab9-5c0c5685f709";//"us-east-1:8609474f-b806-4464-95a1-ed5f6bb0fe38"; //"us-east-1_G5nTErGjf";
   //  protected static final Regions MY_REGION = Regions.US_EAST_2; // WHAT EVER REGION IT MAY BE, PLEASE CHOOSE EXACT
-    public static final String BUCKET_NAME ="test12321a"; //"omnapibucket";
+    //public static final String BUCKET_NAME ="test12321a"; //"omnapibucket";
 
 
     private static final int PICK_IMAGE_REQUEST_CODE = 1;
